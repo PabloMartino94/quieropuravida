@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestros Principales Productos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      margin-bottom: 40px;
+      overflow-x: hidden; /* Evita la barra de desplazamiento horizontal */
+    }
+
+    header {
+      background-color: #ffffff;
+      padding: 10px;
+    }
+
+    h1 {
+      color: #333333;
+      text-align: center;
+      margin: 0;
+      margin-top: 20px;
+    }
+
+    section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      margin-top: 50px;
+      padding-bottom: 60px; /* Aumenta el espacio inferior */
+      background-color: #f2f2f2; /* Cambia el color de fondo */
+    }
+
+    .product {
+      position: relative; /* Agregado para posicionar el botón de eliminar */
+      margin: 10px;
+      text-align: center;
+    }
+
+    .product input[type="number"] {
+      width: 40px; /* Ajusta el ancho según tus preferencias */
+      padding: 5px;
+      text-align: center;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 5px 0;
+    }
+
+    .eliminar-producto {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: #fff;
+      background-color: #ff0000;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+   .eliminar-producto:hover {
+     background-color: #cc0000;
+    }
+
+    p {
+      max-width: 400px;
+    }
+
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      right: 0;
+      background-color: #111;
+      overflow-y: auto; /* Agregado para habilitar el scroll vertical */
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 50px;
+    }
+
+    .sidebar-content {
+      width: 400px;
+      margin: 20px;
+      color: white;
+      position: relative; /* Agregado */
+    }
+
+    .sidebar-content button {
+      position: absolute;
+      bottom: 10px; /* Ajustado para que esté más abajo */
+      right: 50px;
+      background-color: #ff0000;
+      color: #ffffff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .sidebar-content button:hover {
+      background-color: #cc0000;
+    }
+
+    .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+
+    .visible {
+      width: 400px;
+    }
+
+    footer {
+      background-color: #333333;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .whatsapp-logo {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Nuestros Principales Productos</h1>
+</header>
+
+<section style="display: flex; flex-wrap: wrap; justify-content: center;">
+  <div class="product">
+    <img src="https://www.mendoza.gov.ar/wp-content/uploads/sites/49/2021/05/TE-3.jpg" alt="Imagen de Producto 1" style="width: 300px; height: 400px; object-fit: cover;">
+    <p>Té en Hebras de 50 gr</p>
+    <button onclick="mostrarDetalles('Té en Hebras de 50 gr', 300, 50.00)">Agregar al Carrito</button>
+  </div>
+  <div class="product">
+    <img src="https://www.mendoza.gov.ar/wp-content/uploads/sites/49/2021/02/IMG-20210128-WA0043.jpg" alt="Descripción de la imagen 2" style="width: 300px; height: 400px; object-fit: cover;">
+    <p>Té en Hebras de 100 gr</p>
+    <button onclick="mostrarDetalles('Té en Hebras de 100 gr', 500, 50.00)">Agregar al Carrito</button>
+  </div>
+  <div class="product">
+    <img src="https://www.mendoza.gov.ar/wp-content/uploads/sites/83/2022/06/FotoPuraVida2-150x150.jpeg" alt="Descripción de la imagen 2" style="width: 300px; height: 400px; object-fit: cover;">
+    <p>5 bolsas de 50 gr</p>
+    <button onclick="mostrarDetalles('5 bolsas de 50 gr', 1200, 50.00)">Agregar al Carrito</button>
+  </div>
+  <div class="product">
+    <img src="https://www.mendoza.gov.ar/wp-content/uploads/sites/83/2022/06/FotoPuravida1.jpeg" alt="Descripción de la imagen 2" style="width: 300px; height: 400px; object-fit: cover;">
+    <p>5 bolsas de 100 gr</p>
+    <button onclick="mostrarDetalles('5 bolsas de 100 gr', 2000, 50.00)">Agregar al Carrito</button>
+  </div>
+</section>
+
+<div id="detalles" class="sidebar">
+  <a href="javascript:void(0)" class="closebtn" onclick="cerrarDetalles()">×</a>
+  <div class="sidebar-content">
+    <h2>Detalles del Carrito</h2>
+    <div id="productosEnCarrito"></div>
+    <hr>
+    <p>Subtotal: $<span id="subtotal">0.00</span></p>
+    <p>Envío: $<span id="envio">0.00</span></p>
+    <p>Total: $<span id="total">0.00</span></p>
+    <button onclick="realizarPago()">Pagar</button>
+  </div>
+</div>
+
+<p> </p>
+
+<footer style="display: flex; flex-direction: row; align-items: center; justify-content: center; background-color: #333333; color: #f2f2f2; position: fixed; bottom: 0; width: 100%; padding: 10px 0;">
+    <p style="margin-right: 20px;">
+        © 2023 Pura Vida. Todos los derechos reservados.
+    </p>
+
+    <a href="https://wa.me/5492613879656?text=Estoy%20interesado%20en%20conocer%20más%20sobre%20los%20productos%20de%20Quiero%20Pura%20Vida" style="margin-right: 20px;">
+        <i class="fab fa-whatsapp" style="font-size: 24px;"></i>
+    </a>
+
+    <a href="file:///C:/Users/pablo/OneDrive/Escritorio/Web%20Quiero%20Pura%20Vida/Producci%C3%B3n/Pol%C3%ADtica%20de%20Privacidad.html" style="color: #f2f2f2; margin-right: 20px;" target="_blank">Política de Privacidad</a>
+
+    <i class="fas fa-seedling" style="font-size: 24px;"></i>
+    <a href="https://wa.me/5492613879656?text=Estoy%20interesado%20en%20conocer%20más%20sobre%20los%20productos%20de%20Quiero%20Pura%20Vida" class="whatsapp-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1198px-WhatsApp.svg.png" alt="Logo de WhatsApp" width="30" height="30">
+    </a>
+</footer>
+
+<script>
+  // Variables globales para almacenar los productos seleccionados y el valor del envío
+  var productosSeleccionados = [];
+  var valorEnvio = 350.00; // Establecer el valor del envío
+
+  function mostrarDetalles(nombre, precio) {
+    // Crear un objeto para el producto actual
+    var productoActual = {
+      nombre: nombre,
+      precio: precio,
+      cantidad: 1 // Por defecto, se agrega una unidad
+    };
+
+    // Agregar el producto al array de productos seleccionados
+    productosSeleccionados.push(productoActual);
+
+    // Calcular y mostrar el total
+    actualizarTotal();
+
+    // Mostrar la barra lateral
+    abrirDetalles();
+  }
+
+  function abrirDetalles() {
+    // Mostrar la barra lateral
+    var detalles = document.getElementById("detalles");
+    detalles.style.width = "400px";
+
+    // Mostrar la lista de productos en el carrito
+    mostrarProductosEnCarrito();
+  }
+
+  function cerrarDetalles() {
+    // Cerrar la barra lateral
+    var detalles = document.getElementById("detalles");
+    detalles.style.width = "0";
+  }
+
+  function actualizarTotal() {
+    var subtotal = productosSeleccionados.reduce(function (total, producto) {
+      return total + producto.precio * producto.cantidad;
+    }, 0);
+
+    // Calcular el nuevo total sumando el subtotal y el valor del envío
+    var nuevoTotal = subtotal + valorEnvio;
+
+    // Mostrar el nuevo total
+    document.getElementById("subtotal").innerText = subtotal.toFixed(2);
+    document.getElementById("envio").innerText = valorEnvio.toFixed(2);
+    document.getElementById("total").innerText = nuevoTotal.toFixed(2);
+  }
+
+  function mostrarProductosEnCarrito() {
+    // Obtener el contenedor de productos en la barra lateral
+    var productosEnCarrito = document.getElementById("productosEnCarrito");
+
+    // Limpiar el contenido actual
+    productosEnCarrito.innerHTML = "";
+
+    // Mostrar cada producto en el contenedor
+    productosSeleccionados.forEach(function (producto, index) {
+      var productoHTML = document.createElement("div");
+      productoHTML.innerHTML = `
+        <div class="product">
+          <button class="eliminar-producto" onclick="eliminarProducto(${index})">X</button>
+          <p>${producto.nombre} x <input type="number" id="cantidad-${index}" value="${producto.cantidad}" min="1" oninput="actualizarCantidad(${index})"></p>
+          <p>Precio unitario: $${producto.precio.toFixed(2)}</p>
+          <hr>
+        </div>
+      `;
+      productosEnCarrito.appendChild(productoHTML);
+    });
+  }
+
+  function actualizarCantidad(index) {
+    // Actualizar la cantidad del producto en el array
+    var cantidadInput = document.getElementById(`cantidad-${index}`);
+    productosSeleccionados[index].cantidad = parseInt(cantidadInput.value) || 1;
+
+    // Recalcular y actualizar el total
+    actualizarTotal();
+  }
+
+  function eliminarProducto(index) {
+    // Eliminar el producto del array
+    productosSeleccionados.splice(index, 1);
+
+    // Recalcular y actualizar el total
+    actualizarTotal();
+
+    // Mostrar la lista de productos actualizada
+    mostrarProductosEnCarrito();
+  }
+
+  function realizarPago() {
+    // Lógica para el pago
+    console.log("Realizando Pago...");
+  }
+</script>
+
+</body>
+</html>
